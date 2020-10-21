@@ -1,0 +1,161 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover">
+        <link rel="stylesheet" href="https://weui.io/style/weui.css">
+        <!-- <link rel="stylesheet" href="https://weui.io/example.css"> -->
+    </head>
+    <body ontouchstart>
+      <form id="form">
+        <div class="weui-form">
+            <div class="weui-form__text-area">
+              <h3>中国铁塔股份有限公司郑州市分公司</h3>
+              <div class="weui-form__desc">资产整合中心</div>
+            </div>
+            <div class="weui-form__control-area">
+              <div class="weui-cells__group weui-cells__group_form">
+                <div class="weui-cells weui-cells_form">
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">类别</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="js_input" name="type" class="weui-input" placeholder="填写类别">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">品牌</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="js_input" name="brand" class="weui-input" placeholder="请填写品牌">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">型号</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="js_input" name="model" class="weui-input" placeholder="请填写型号">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">原站址名称</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="js_input" name="originXxhName" class="weui-input" placeholder="请填写原站址名称">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">原站址编码</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="js_input" name="originXxhCode" class="weui-input" placeholder="请填写原站址编码">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">入库日期</label></div>
+                    <div class="weui-cell__bd">
+                      <input style="opacity: 0; display: none;" name="repairDate" id="warehousingDateInput" class="weui-input">
+                      <a href="javascript:" class="weui-btn weui-btn_default" id="warehousingDatePicker">选择日期</a>
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">设备状态</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="js_input" name="deviceState" class="weui-input" placeholder="请填写设备状态">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">设备新ID</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="js_input" name="deviceNewId" class="weui-input" placeholder="请填写设备新ID">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">维修人员</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="js_input" name="repairPeople" class="weui-input" placeholder="请填写维修人员">
+                    </div>
+                  </div>
+                  <div class="weui-cell weui-cell_active">
+                    <div class="weui-cell__hd"><label class="weui-label">维修日期</label></div>
+                    <div class="weui-cell__bd">
+                      <input style="opacity: 0; display: none;" name="repairDate" id="repairDateInput" class="weui-input">
+                      <a href="javascript:" class="weui-btn weui-btn_default" id="repairDatePicker">选择日期</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a href="javascript:" id="submit" class="weui-btn weui-btn_primary">提交</a>
+            <div class="weui-form__extra-area">
+              <div class="weui-footer">
+              </div>
+            </div>
+          </div>
+      </form>
+    </body>
+    <script src="https://weui.io/zepto.min.js"></script>
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="https://res.wx.qq.com/open/libs/weuijs/1.2.1/weui.min.js"></script>
+    <!-- <script src="https://weui.io/example.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.7.0/dist/av-min.js"></script>
+    <script type="text/javascript" class="picker js_show">
+      localStorage.setItem('debug', 'leancloud*');
+        AV.init({
+          appId: "tmMnn1yFcpKilL567lWQobF5-MdYXbMMI",
+          appKey: "xaJQcqshetLDKA4PdLorCfmw"
+        });
+        $('#warehousingDatePicker').on('click', function () {
+            weui.datePicker({
+                start: 1990,
+                end: new Date().getFullYear(),
+                onChange: function (result) {
+                    console.log(result);
+                },
+                onConfirm: function (result) {
+                  $('#warehousingDateInput').val(result.join('-'));
+                  $('#warehousingDatePicker').text(result.join('-'))
+                },
+                title: '选择入库日期'
+            });
+        });
+        $('#repairDatePicker').on('click', function () {
+            weui.datePicker({
+                start: 1990,
+                end: new Date().getFullYear(),
+                onChange: function (result) {
+                    console.log(result);
+                },
+                onConfirm: function (result) {
+                    console.log(result);
+                    $('#repairDateInput').val(result.join('-'));
+                    $('#repairDatePicker').text(result.join('-'));
+                },
+                title: '选择维修日期'
+            });
+        });
+        $('#submit').on('click', function () {
+            const list = $('#form').serializeArray()
+            // 声明 class
+            const Todo = AV.Object.extend('Todo');
+
+            // 构建对象
+            const todo = new Todo();
+            
+            for (const obj of list) {
+              todo.set(obj.name, obj.value);
+            }
+
+            // 将对象保存到云端
+            todo.save().then((todo) => {
+              // 成功保存之后，执行其他逻辑
+              console.log(`保存成功。objectId：${todo.id}`);
+            }, (error) => {
+              console.log(error);
+              // 异常处理
+            });
+
+            // const TestObject = AV.Object.extend('TestObject');
+            // const testObject = new TestObject();
+            // testObject.set('words', 'Hello world!');
+            // testObject.save().then((testObject) => {
+            //   console.log('保存成功。')
+            // })
+
+        });
+    </script>
+        
+</html>
