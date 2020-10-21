@@ -101,7 +101,6 @@
     <script src="https://weui.io/zepto.min.js"></script>
     <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script src="https://res.wx.qq.com/open/libs/weuijs/1.2.1/weui.min.js"></script>
-    <!-- <script src="https://weui.io/example.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.7.0/dist/av-min.js"></script>
     <script type="text/javascript" src="qrcode.js"></script>
     <script type="text/javascript" class="picker js_show">
@@ -135,6 +134,8 @@
           });
           $('#warehousingDatePicker').text(todo.get("warehousingDate"));
           $('#repairDatePicker').text(todo.get("repairDate"));
+        },(error)=>{
+          console.log(error)
         });
       }
         $('#warehousingDatePicker').on('click', function () {
@@ -186,7 +187,9 @@
                 width : 200,
                 height : 200
               });
-              qrcode.makeCode(todo.id);
+              var qrcodeStr = "https://litao-leven.github.io/IronTower/?id=" + todo.id;
+              console.log(`qrcodeStr${qrcodeStr}`);
+              qrcode.makeCode(qrcodeStr);
               $('#iosDialog1').fadeIn(200);
             }, (error) => {
               console.log(error);
