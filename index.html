@@ -1,7 +1,8 @@
 <html>
     <head>
-        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover">
-        <link rel="stylesheet" href="weui.css">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover">
+      <link rel="stylesheet" href="weui.css">
     </head>
     <body ontouchstart>
       <form id="form">
@@ -95,7 +96,15 @@
                 <a href="javascript:" id="imgSaveCacel" class="weui-dialog__btn weui-dialog__btn_default"> 取消</a>
             </div>
         </div>
-    </div>
+      </div>
+      <div id="loadingToast" style="opacity: 0; display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content">数据加载中</p>
+        </div>
+      </div>
+      <div class="weui-toptips weui-toptips_warn" id="topTips" style="opacity: 0; display: none;">错误提示</div>
     </body>
     <script src="zepto.min.js"></script>
     <script type="text/javascript" src="jweixin-1.0.0.js"></script>
@@ -126,15 +135,21 @@
       if (id != null) {
         console.log(id);
         $('#submit').hide();
+        $('#loadingToast').fadeIn(200);
         const query = new AV.Query('Todo');
         query.get(id).then((todo) => {
+          $('#loadingToast').fadeOut(200);
           $('#form').find('input').forEach((input)=>{
             $(input).val(todo.get(input.name));
           });
           $('#warehousingDatePicker').text(todo.get("warehousingDate"));
           $('#repairDatePicker').text(todo.get("repairDate"));
         },(error)=>{
-          console.log(error)
+          $('#loadingToast').fadeOut();
+              $('#topTips').fadeIn(200);
+              setTimeout(() => {
+                $('#topTips').fadeOut(200);
+              }, 2000);
         });
       }
         $('#warehousingDatePicker').on('click', function () {
@@ -167,6 +182,7 @@
             });
         });
         $('#submit').on('click', function () {
+            $('#loadingToast').fadeIn(200);
             const list = $('#form').serializeArray()
             // 声明 class
             const Todo = AV.Object.extend('Todo');
@@ -189,10 +205,14 @@
               var qrcodeStr = "https://litao-leven.github.io/IronTower/?id=" + todo.id;
               console.log(`qrcodeStr${qrcodeStr}`);
               qrcode.makeCode(qrcodeStr);
+              $('#loadingToast').fadeOut(200);
               $('#iosDialog1').fadeIn(200);
             }, (error) => {
-              console.log(error);
-              // 异常处理
+              $('#loadingToast').fadeOut();
+              $('#topTips').fadeIn(200);
+              setTimeout(() => {
+                $('#topTips').fadeOut(200);
+              }, 2000);
             });
 
         });
