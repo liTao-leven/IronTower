@@ -47,7 +47,7 @@
                   <div class="weui-cell weui-cell_active">
                     <div class="weui-cell__hd"><label class="weui-label">入库日期</label></div>
                     <div class="weui-cell__bd">
-                      <input style="opacity: 0; display: none;" name="repairDate" id="warehousingDateInput" class="weui-input">
+                      <input style="opacity: 0; display: none;" name="warehousingDate" id="warehousingDateInput" class="weui-input">
                       <a href="javascript:" class="weui-btn weui-btn_default" id="warehousingDatePicker">选择日期</a>
                     </div>
                   </div>
@@ -86,18 +86,57 @@
             </div>
           </div>
       </form>
+      <div class="js_dialog" id="iosDialog1" style="opacity: 0; display: none;">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__btn weui-dialog__btn_default">保存二维码</strong></div>
+            <div id="qrcode" style="width: 200; height: 200; margin-left:auto; margin-right:auto; margin-bottom: 10;"></div>
+            <div><p class="weui-dialog__btn weui-dialog__btn_default" style="font-size: 10px;">提示：<span style="color:#04be02; font-weight: bold;">长按图片</span>&nbsp;保存至手机相册</p><span></span></div>
+            <div class="weui-dialog__ft">
+                <a href="javascript:" id="imgSaveCacel" class="weui-dialog__btn weui-dialog__btn_default"> 取消</a>
+            </div>
+        </div>
+    </div>
     </body>
     <script src="https://weui.io/zepto.min.js"></script>
     <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script src="https://res.wx.qq.com/open/libs/weuijs/1.2.1/weui.min.js"></script>
     <!-- <script src="https://weui.io/example.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.7.0/dist/av-min.js"></script>
+    <script type="text/javascript" src="qrcode.js"></script>
     <script type="text/javascript" class="picker js_show">
       localStorage.setItem('debug', 'leancloud*');
+      var url = window.location.href;
+      var id = getQueryVariable('id');
+      // if id != undefined{
+
+      // }
+      function getQueryVariable(variable)
+      {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+          var pair = vars[i].split("=");
+          if(pair[0] == variable){return pair[1];}
+        }
+        return(null);
+      }
         AV.init({
           appId: "tmMnn1yFcpKilL567lWQobF5-MdYXbMMI",
           appKey: "xaJQcqshetLDKA4PdLorCfmw"
         });
+      if (id != null) {
+        console.log(id);
+        $('#submit').hide();
+        const query = new AV.Query('Todo');
+        query.get(id).then((todo) => {
+          $('#form').find('input').forEach((input)=>{
+            $(input).val(todo.get(input.name));
+          });
+          $('#warehousingDatePicker').text(todo.get("warehousingDate"));
+          $('#repairDatePicker').text(todo.get("repairDate"));
+        });
+      }
         $('#warehousingDatePicker').on('click', function () {
             weui.datePicker({
                 start: 1990,
@@ -143,19 +182,22 @@
             todo.save().then((todo) => {
               // 成功保存之后，执行其他逻辑
               console.log(`保存成功。objectId：${todo.id}`);
+              var qrcode = new QRCode(document.getElementById("qrcode"), {
+                width : 200,
+                height : 200
+              });
+              qrcode.makeCode(todo.id);
+              $('#iosDialog1').fadeIn(200);
             }, (error) => {
               console.log(error);
               // 异常处理
             });
 
-            // const TestObject = AV.Object.extend('TestObject');
-            // const testObject = new TestObject();
-            // testObject.set('words', 'Hello world!');
-            // testObject.save().then((testObject) => {
-            //   console.log('保存成功。')
-            // })
-
         });
+        $('#imgSaveCacel').on('click',function(){
+          $('#iosDialog1').fadeOut(200)
+          $('#qrcode').empty();
+        })
     </script>
         
 </html>
