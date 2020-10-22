@@ -104,7 +104,8 @@
             <p class="weui-toast__content">数据加载中</p>
         </div>
       </div>
-      <div class="weui-toptips weui-toptips_warn" id="topTips" style="opacity: 0; display: none;">错误提示</div>
+      <div class="weui-toptips weui-toptips_warn" id="topTips" style="opacity: 0; display: none;">网络异常请重试</div>
+      <div class="weui-mask_transparent" id="mask" style="opacity: 0; display: none;"></div>
     </body>
     <script src="zepto.min.js"></script>
     <script type="text/javascript" src="jweixin-1.0.0.js"></script>
@@ -135,6 +136,7 @@
       if (id != null) {
         console.log(id);
         $('#submit').hide();
+        $("#mask").attr("style","display: block;")
         $('#loadingToast').fadeIn(200);
         const query = new AV.Query('Todo');
         query.get(id).then((todo) => {
